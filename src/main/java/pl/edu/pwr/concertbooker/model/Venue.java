@@ -1,4 +1,4 @@
-package model;
+package pl.edu.pwr.concertbooker.model;
 
 import lombok.Getter;
 

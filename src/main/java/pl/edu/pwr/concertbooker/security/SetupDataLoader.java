@@ -1,18 +1,6 @@
-package security;
+package pl.edu.pwr.concertbooker.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import security.repository.PrivilegeRepository;
-import security.repository.RoleRepository;
-import security.repository.UserRepository;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @Component
 public class SetupDataLoader {

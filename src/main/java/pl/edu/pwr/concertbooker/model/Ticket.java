@@ -1,8 +1,8 @@
-package model;
+package pl.edu.pwr.concertbooker.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import model.enums.TicketType;
+import pl.edu.pwr.concertbooker.model.enums.TicketType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

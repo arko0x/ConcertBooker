@@ -1,8 +1,7 @@
-package security;
+package pl.edu.pwr.concertbooker.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;

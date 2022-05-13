@@ -1,4 +1,4 @@
-package model;
+package pl.edu.pwr.concertbooker.model;
 
 
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @Entity
 @Getter
-public class Row {
+public class Sector {
     @Id
     @GeneratedValue
     private long id;
@@ -18,10 +18,10 @@ public class Row {
     @Setter
     @NotNull
     private String name;
-
+    
     @OneToMany
-    private Collection<Seat> seats;
+    private Collection<Row> rows;
 
     @ManyToOne
-    private Sector sector;
+    private Venue venue;
 }

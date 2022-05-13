@@ -23,7 +23,7 @@ public class Seat {
     @NotNull
     private SeatType type;
 
-    @OneToMany
+    @OneToMany(mappedBy = "seat")
     private Collection<Ticket> tickets;
 
     @Setter

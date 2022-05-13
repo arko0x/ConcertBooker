@@ -19,9 +19,10 @@ public class Row {
     @NotNull
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "row")
     private Collection<Seat> seats;
 
     @ManyToOne
+    @JoinColumn(name="sector_id", nullable = false)
     private Sector sector;
 }

@@ -5,4 +5,5 @@ import pl.edu.pwr.concertbooker.security.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
+    User findUserByUsername(String username);
 }

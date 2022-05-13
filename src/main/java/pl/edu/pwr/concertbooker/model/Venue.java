@@ -16,6 +16,6 @@ public class Venue {
     @NotNull
     private String name;
 
-    @OneToMany
-    private Collection<Row> rows;
+    @OneToMany(mappedBy = "venue")
+    private Collection<Sector> sector;
 }

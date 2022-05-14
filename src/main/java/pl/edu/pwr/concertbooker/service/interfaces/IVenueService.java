@@ -15,6 +15,4 @@ public interface IVenueService {
     VenueInfoDto getVenueByID(long id) throws EntityNotFoundException;
     Venue getVenue(long id) throws EntityNotFoundException;
     void deleteVenueById(long id) throws  EntityNotFoundException;
-
-
 }

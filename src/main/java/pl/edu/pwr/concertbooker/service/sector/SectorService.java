@@ -41,7 +41,9 @@ public class SectorService implements ISectorService {
             sector.setName(sectorDto.getSectorName());
             sector.setColumnInVenue(sectorDto.getColumnInVenue());
             sector.setRowInVenue(sectorDto.getColumnInVenue());
+            sectorRepository.save(sector);
         }
+        else throw new EntityNotFoundException(sectorDto.getId());
     }
 
     @Override

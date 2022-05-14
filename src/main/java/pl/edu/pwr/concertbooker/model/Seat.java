@@ -29,6 +29,7 @@ public class Seat {
     @Setter
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "rower_id", nullable = false)
     private Row row;
 
 }

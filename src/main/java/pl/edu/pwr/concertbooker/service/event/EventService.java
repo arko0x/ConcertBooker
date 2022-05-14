@@ -44,6 +44,10 @@ public class EventService implements IEventService {
             event.setDate(eventDto.getDate());
             event.setDescription(eventDto.getDescription());
 
+            Collection<Ticket> tickets = ticketService.getTicketsForEventWithId(event.getId());
+            if (tickets != null) {
+                sendChangeEventInfoToUsers(tickets, eventDto);
+            }
             eventRepository.save(event);
         }
     }
@@ -69,13 +73,24 @@ public class EventService implements IEventService {
         }
 
         Collection<Ticket> tickets = ticketService.getTicketsForEventWithId(id);
-        sendCancellationInfoToUsers(tickets);
-        ticketService.cancelTickets(tickets.stream().map(Ticket::getId).collect(Collectors.toList()));
+
+        if (tickets != null) {
+            sendCancellationInfoToUsers(tickets);
+            ticketService.cancelTickets(tickets.stream().map(Ticket::getId).collect(Collectors.toList()));
+        }
+
+        eventRepository.deleteById(id);
     }
 
     private void sendCancellationInfoToUsers(Collection<Ticket> tickets) {
         tickets.forEach(ticket -> {
             // tutaj powinno byc wysylanie maili
+        });
+    }
+
+    private void sendChangeEventInfoToUsers(Collection<Ticket> tickets, UpdateEventDto updateEventDto) {
+        tickets.forEach(ticket -> {
+            // tutaj tez jakies maile
         });
     }
 }

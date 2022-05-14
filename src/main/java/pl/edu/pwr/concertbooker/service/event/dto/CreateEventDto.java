@@ -18,4 +18,7 @@ public class CreateEventDto {
     @NotNull
     @NotEmpty
     private String description;
+    @NotNull
+    @NotEmpty
+    private String artist;
 }

@@ -19,4 +19,7 @@ public class UpdateEventDto {
     private LocalDateTime date;
     @NotEmpty
     private String description;
+    @NotNull
+    @NotEmpty
+    private String artist;
 }

@@ -55,13 +55,13 @@ public class EventService implements IEventService {
     @Override
     public Collection<EventInfoDto> getAllEvents() {
         return eventRepository.findAll().stream().map(event -> new EventInfoDto(event.getId(), event.getName(),
-                event.getDate(), event.getDescription())).collect(Collectors.toList());
+                event.getDate(), event.getDescription(), event.getArtist())).collect(Collectors.toList());
     }
 
     @Override
     public EventInfoDto getEventById(long id) throws EntityNotFoundException {
         return eventRepository.findById(id).map(event -> new EventInfoDto(event.getId(), event.getName(), event.getDate(),
-                event.getDescription())).orElseThrow(() -> new EntityNotFoundException(id));
+                event.getDescription(), event.getArtist())).orElseThrow(() -> new EntityNotFoundException(id));
     }
 
     @Override

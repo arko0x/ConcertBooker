@@ -10,6 +10,7 @@ import java.util.Collection;
 
 @Entity
 @Getter
+@Setter
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,5 @@
 package pl.edu.pwr.concertbooker.service.interfaces;
 
-import org.springframework.data.domain.Page;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
 import pl.edu.pwr.concertbooker.service.event.dto.CreateEventDto;
 import pl.edu.pwr.concertbooker.service.event.dto.EventInfoDto;

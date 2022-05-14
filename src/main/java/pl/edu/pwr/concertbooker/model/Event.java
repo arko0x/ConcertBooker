@@ -20,6 +20,7 @@ public class Event {
 
     private String name;
     private LocalDateTime date;
+    private String artist;
     private String description;
 
     @OneToMany(mappedBy = "event")

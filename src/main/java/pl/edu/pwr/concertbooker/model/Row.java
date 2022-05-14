@@ -10,6 +10,7 @@ import java.util.Collection;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "ROWER")
 public class Row {
     @Id

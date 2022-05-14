@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class CreateSectorDto {
+public class UpdateSectorDto {
+    @NotNull
+    private long id;
     @NotNull
     @NotEmpty
     private String sectorName;
@@ -17,10 +19,7 @@ public class CreateSectorDto {
     @Min(1)
     private int numberOfRows;
     @NotNull
-    private long venueId;
-    @NotNull
     private int rowInVenue;
     @NotNull
     private int columnInVenue;
-
 }

@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class EventInfoDto {
-    long id;
-    String name;
-    LocalDateTime date;
-    String description;
+    private long id;
+    private String name;
+    private LocalDateTime date;
+    private String description;
+    private String artist;
 }

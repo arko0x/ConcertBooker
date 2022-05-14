@@ -10,17 +10,22 @@ import java.util.Collection;
 
 @Entity
 @Getter
+@Setter
 public class Sector {
     @Id
     @GeneratedValue
     private long id;
 
-    @Setter
     @NotNull
     private String name;
     
     @OneToMany(mappedBy = "sector")
     private Collection<Row> rows;
+
+    @NotNull
+    private int rowInVenue;
+    @NotNull
+    private int columnInVenue;
 
     @ManyToOne
     @JoinColumn(name="venue_id", nullable = false)

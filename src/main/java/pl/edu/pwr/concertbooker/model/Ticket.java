@@ -19,6 +19,10 @@ public class Ticket {
     private TicketType type;
 
     @ManyToOne
+    @JoinColumn(name="seat_id", nullable = false)
     private Seat seat;
 
+    @ManyToOne
+    @JoinColumn(name="event_id", nullable = false)
+    private Event event;
 }

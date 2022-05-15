@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 public class RowInfoDto {
-    private long id;
+    private Long id;
     private String name;
-    private long sectorId;
+    private Long sectorId;
 }

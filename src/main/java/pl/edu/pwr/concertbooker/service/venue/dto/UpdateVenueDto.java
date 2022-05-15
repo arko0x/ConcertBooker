@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UpdateVenueDto {
     @NotNull
-    private long Id;
+    private Long id;
     @NotNull
     @NotEmpty
     private String name;

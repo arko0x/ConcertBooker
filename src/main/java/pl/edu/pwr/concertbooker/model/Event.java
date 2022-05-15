@@ -3,10 +3,7 @@ package pl.edu.pwr.concertbooker.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -25,4 +22,8 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private Collection<Ticket> tickets;
+
+    @ManyToOne
+    @JoinColumn(name = "venue_id", nullable = false)
+    private Venue venue;
 }

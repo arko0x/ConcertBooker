@@ -1,5 +1,6 @@
 package pl.edu.pwr.concertbooker.service.seat.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pwr.concertbooker.model.enums.SeatType;

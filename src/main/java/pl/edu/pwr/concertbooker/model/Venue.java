@@ -23,4 +23,7 @@ public class Venue {
 
     @OneToMany(mappedBy = "venue")
     private Collection<Sector> sectors;
+
+    @OneToMany(mappedBy = "venue")
+    private Collection<Event> events;
 }

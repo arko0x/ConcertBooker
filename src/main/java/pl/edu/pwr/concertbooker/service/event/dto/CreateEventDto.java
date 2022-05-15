@@ -21,4 +21,6 @@ public class CreateEventDto {
     @NotNull
     @NotEmpty
     private String artist;
+    @NotNull
+    private long venueId;
 }

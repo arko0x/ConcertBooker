@@ -3,6 +3,7 @@ package pl.edu.pwr.concertbooker.model;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pwr.concertbooker.model.enums.TicketType;
+import pl.edu.pwr.concertbooker.security.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,6 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
     @Setter
     private TicketType type;
 
@@ -26,4 +26,8 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name="event_id", nullable = false)
     private Event event;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

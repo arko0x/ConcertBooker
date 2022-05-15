@@ -14,13 +14,10 @@ public class CreateSectorDto {
     @NotEmpty
     private String sectorName;
     @NotNull
-    @Min(1)
-    private int numberOfRows;
+    private Long venueId;
     @NotNull
-    private long venueId;
+    private Integer rowInVenue;
     @NotNull
-    private int rowInVenue;
-    @NotNull
-    private int columnInVenue;
+    private Integer columnInVenue;
 
 }

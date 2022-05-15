@@ -33,15 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oauthUserService)
                 .and()
-                .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                .successHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
 
-                        userService.processOAuthPostLogin(oauthUser.getEmail());
+                    userService.processOAuthPostLogin(oauthUser.getEmail());
 
-                        httpServletResponse.sendRedirect("/list");
-                    }
+                    httpServletResponse.sendRedirect("/");
                 });
 
         http.headers().frameOptions().disable();

@@ -19,5 +19,5 @@ import java.util.Collection;
 public class CreateRowDto {
     private String name;
     @NotNull
-    private long sectorId;
+    private Long sectorId;
 }

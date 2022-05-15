@@ -2,10 +2,12 @@ package pl.edu.pwr.concertbooker.service.event;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.edu.pwr.concertbooker.exception.custom.CannotEditEventWithAlreadySoldTicketsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
-import pl.edu.pwr.concertbooker.model.Event;
-import pl.edu.pwr.concertbooker.model.Ticket;
+import pl.edu.pwr.concertbooker.exception.custom.NotUserTicketException;
+import pl.edu.pwr.concertbooker.model.*;
 import pl.edu.pwr.concertbooker.repository.EventRepository;
+import pl.edu.pwr.concertbooker.repository.VenueRepository;
 import pl.edu.pwr.concertbooker.service.event.dto.CreateEventDto;
 import pl.edu.pwr.concertbooker.service.event.dto.EventInfoDto;
 import pl.edu.pwr.concertbooker.service.event.dto.UpdateEventDto;
@@ -13,6 +15,7 @@ import pl.edu.pwr.concertbooker.service.interfaces.IEventService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,29 +23,57 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EventService implements IEventService {
     private EventRepository eventRepository;
+    private VenueRepository venueRepository;
     private ITicketService ticketService;
 
     @Override
-    public void createEvent(CreateEventDto eventDto) {
+    public void createEventWithTickets(CreateEventDto eventDto) throws EntityNotFoundException {
         Event event = new Event();
         event.setName(eventDto.getName());
         event.setDate(eventDto.getDate());
         event.setDescription(eventDto.getDescription());
+        event.setArtist(eventDto.getArtist());
 
-        eventRepository.save(event);
+        Optional<Venue> venueOptional = venueRepository.findById(eventDto.getVenueId());
+
+        if (venueOptional.isPresent()) {
+            event.setVenue(venueOptional.get());
+            eventRepository.save(event);
+            createTicketsForEvent(event);
+        } else {
+            throw new EntityNotFoundException(eventDto.getVenueId());
+        }
+    }
+
+    private void createTicketsForEvent(Event event) throws EntityNotFoundException {
+        Venue venue = event.getVenue();
+        for (Sector sector : venue.getSectors()) {
+            for (Row row : sector.getRows()) {
+                for (Seat seat : row.getSeats()) {
+                    ticketService.addTicketForEventAndSeat(event, seat.getId());
+                }
+            }
+        }
     }
 
     @Override
-    public void updateEvent(UpdateEventDto eventDto) throws EntityNotFoundException {
+    public void updateEvent(UpdateEventDto eventDto) throws EntityNotFoundException, CannotEditEventWithAlreadySoldTicketsException {
         Optional<Event> eventOptional = eventRepository.findById(eventDto.getId());
+        Optional<Venue> venueOptional = venueRepository.findById(eventDto.getVenueId());
 
         if (eventOptional.isEmpty()) {
             throw new EntityNotFoundException(eventDto.getId());
+        } else if (venueOptional.isEmpty()) {
+            throw new EntityNotFoundException(eventDto.getVenueId());
         } else {
             Event event = eventOptional.get();
+            if (ticketService.getTicketsForEventWithId(event.getId()).stream().anyMatch(e -> e.getUser() != null)) {
+                throw new CannotEditEventWithAlreadySoldTicketsException();
+            }
             event.setName(eventDto.getName());
             event.setDate(eventDto.getDate());
             event.setDescription(eventDto.getDescription());
+            event.setArtist(eventDto.getArtist());
 
             Collection<Ticket> tickets = ticketService.getTicketsForEventWithId(event.getId());
             if (tickets != null) {
@@ -65,7 +96,25 @@ public class EventService implements IEventService {
     }
 
     @Override
-    public void cancelEventById(long id) throws EntityNotFoundException {
+    public Collection<Event> getEventsForVenueId(long venueId) {
+        Optional<Venue> venueOptional = venueRepository.findById(venueId);
+        if (venueOptional.isPresent()) {
+            return eventRepository.findByVenue(venueOptional.get());
+        }
+        return List.of();
+    }
+
+    @Override
+    public Event getEvent(long id) throws EntityNotFoundException {
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isPresent()) {
+            return eventOptional.get();
+        }
+        throw new EntityNotFoundException(id);
+    }
+
+    @Override
+    public void cancelEventById(long id) throws EntityNotFoundException, NotUserTicketException {
         Optional<Event> eventOptional = eventRepository.findById(id);
 
         if (eventOptional.isEmpty()) {

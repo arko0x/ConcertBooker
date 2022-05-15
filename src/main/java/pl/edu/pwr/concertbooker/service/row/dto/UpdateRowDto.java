@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UpdateRowDto {
     @NotNull
-    private long id;
+    private Long id;
     @NotNull
     private String name;
     @NotNull
-    private long sectorId;
+    private Long sectorId;
 }

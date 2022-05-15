@@ -22,4 +22,7 @@ public class UpdateEventDto {
     @NotNull
     @NotEmpty
     private String artist;
+
+    @NotNull
+    private long venueId;
 }

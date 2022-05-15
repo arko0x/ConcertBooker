@@ -11,15 +11,12 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UpdateSectorDto {
     @NotNull
-    private long id;
+    private Long id;
     @NotNull
     @NotEmpty
     private String sectorName;
     @NotNull
-    @Min(1)
-    private int numberOfRows;
+    private Integer rowInVenue;
     @NotNull
-    private int rowInVenue;
-    @NotNull
-    private int columnInVenue;
+    private Integer columnInVenue;
 }

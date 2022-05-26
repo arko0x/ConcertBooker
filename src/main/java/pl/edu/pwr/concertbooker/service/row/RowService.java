@@ -20,12 +20,11 @@ import java.util.Optional;
 public class RowService implements IRowService {
     RowRepository rowRepository;
     ISectorService sectorService;
-    IVenueService venueService;
     IVenueUsageService venueUsageService;
     @Override
     public Row addRow(CreateRowDto rowDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         var sector = sectorService.getSector(rowDto.getSectorId());
-        var venue = venueService.getVenue(sector.getVenue().getId());
+        var venue = venueUsageService.getVenue(sector.getVenue().getId());
         if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
             throw new CannotEditVenueWithExistingEventsException();
         }
@@ -33,14 +32,13 @@ public class RowService implements IRowService {
         row.setName(rowDto.getName());
         row.setSector(sector);
 
-        rowRepository.save(row);
-        return row;
+        return rowRepository.save(row);
     }
 
     @Override
     public void updateRow(UpdateRowDto rowDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         var sector = sectorService.getSector(rowDto.getSectorId());
-        var venue = venueService.getVenue(sector.getVenue().getId());
+        var venue = venueUsageService.getVenue(sector.getVenue().getId());
         if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
             throw new CannotEditVenueWithExistingEventsException();
         }
@@ -75,7 +73,7 @@ public class RowService implements IRowService {
         Optional<Row> rowOptional = rowRepository.findById(id);
         if (rowOptional.isPresent()) {
             var sector = sectorService.getSector(rowOptional.get().getSector().getId());
-            var venue = venueService.getVenue(sector.getVenue().getId());
+            var venue = venueUsageService.getVenue(sector.getVenue().getId());
             if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
                 throw new CannotEditVenueWithExistingEventsException();
             }

@@ -6,6 +6,7 @@ import pl.edu.pwr.concertbooker.exception.custom.NotUserTicketException;
 import pl.edu.pwr.concertbooker.model.Event;
 import pl.edu.pwr.concertbooker.service.event.dto.CreateEventDto;
 import pl.edu.pwr.concertbooker.service.event.dto.EventInfoDto;
+import pl.edu.pwr.concertbooker.service.event.dto.EventInfoWithVenueDto;
 import pl.edu.pwr.concertbooker.service.event.dto.UpdateEventDto;
 
 import java.util.Collection;
@@ -17,5 +18,6 @@ public interface IEventService {
     EventInfoDto getEventById(long id) throws EntityNotFoundException;
     Collection<Event> getEventsForVenueId(long venueId);
     Event getEvent(long id) throws EntityNotFoundException;
+    EventInfoWithVenueDto getEventWithVenue(long id) throws EntityNotFoundException;
     void cancelEventById(long id) throws EntityNotFoundException, NotUserTicketException;
 }

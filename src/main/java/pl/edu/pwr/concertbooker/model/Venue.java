@@ -26,4 +26,7 @@ public class Venue {
 
     @OneToMany(mappedBy = "venue")
     private Collection<Event> events;
+
+    @NotNull
+    public String seatPattern;
 }

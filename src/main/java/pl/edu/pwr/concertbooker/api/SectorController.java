@@ -38,6 +38,10 @@ public class SectorController {
         return sectorService.getAllSectors();
     }
 
+    @GetMapping("/venue/{venueId}")
+    public Collection<SectorInfoDto> getAllSectorsByVenueId(@PathVariable long venueId) throws EntityNotFoundException {
+        return sectorService.getAlLSectorsByVenueId(venueId);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<SectorInfoDto> getSectorById(@PathVariable long id) throws EntityNotFoundException {
         return ResponseEntity.ok(sectorService.getSectorByID(id));

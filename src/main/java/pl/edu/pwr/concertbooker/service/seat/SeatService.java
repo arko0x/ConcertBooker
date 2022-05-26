@@ -23,14 +23,14 @@ public class SeatService implements ISeatService {
     TicketRepository ticketRepository;
     IRowService rowService;
     ISectorService sectorService;
-    IVenueService venueService;
+//    IVenueUsaService venueService;
     IVenueUsageService venueUsageService;
 
     @Override
     public Seat addSeat(CreateSeatDto seatDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         var row = rowService.getRow(seatDto.getRowId());
         var sector = sectorService.getSector(row.getSector().getId());
-        var venue = venueService.getVenue(sector.getVenue().getId());
+        var venue = venueUsageService.getVenue(sector.getVenue().getId());
         if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
             throw new CannotEditVenueWithExistingEventsException();
         }
@@ -47,7 +47,7 @@ public class SeatService implements ISeatService {
     public void updateSeat(UpdateSeatDto seatDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         var row = rowService.getRow(seatDto.getRowId());
         var sector = sectorService.getSector(row.getSector().getId());
-        var venue = venueService.getVenue(sector.getVenue().getId());
+        var venue = venueUsageService.getVenue(sector.getVenue().getId());
         if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
             throw new CannotEditVenueWithExistingEventsException();
         }
@@ -88,7 +88,7 @@ public class SeatService implements ISeatService {
         if (seatOptional.isPresent()) {
             var row = rowService.getRow(seatOptional.get().getRow().getId());
             var sector = sectorService.getSector(row.getSector().getId());
-            var venue = venueService.getVenue(sector.getVenue().getId());
+            var venue = venueUsageService.getVenue(sector.getVenue().getId());
             if (!venueUsageService.getEventsForVenueId(venue.getId()).isEmpty()) {
                 throw new CannotEditVenueWithExistingEventsException();
             }

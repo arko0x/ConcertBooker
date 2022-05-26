@@ -10,9 +10,12 @@ import pl.edu.pwr.concertbooker.repository.EventRepository;
 import pl.edu.pwr.concertbooker.repository.VenueRepository;
 import pl.edu.pwr.concertbooker.service.event.dto.CreateEventDto;
 import pl.edu.pwr.concertbooker.service.event.dto.EventInfoDto;
+import pl.edu.pwr.concertbooker.service.event.dto.EventInfoWithVenueDto;
 import pl.edu.pwr.concertbooker.service.event.dto.UpdateEventDto;
 import pl.edu.pwr.concertbooker.service.interfaces.IEventService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
+import pl.edu.pwr.concertbooker.service.interfaces.IVenueService;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class EventService implements IEventService {
     private EventRepository eventRepository;
     private VenueRepository venueRepository;
+    private IVenueService venueService;
     private ITicketService ticketService;
 
     @Override
@@ -67,15 +71,15 @@ public class EventService implements IEventService {
             throw new EntityNotFoundException(eventDto.getVenueId());
         } else {
             Event event = eventOptional.get();
-            if (ticketService.getTicketsForEventWithId(event.getId()).stream().anyMatch(e -> e.getUser() != null)) {
-                throw new CannotEditEventWithAlreadySoldTicketsException();
-            }
+//            if (ticketService.getTicketsForEventWithId(event.getId()).stream().anyMatch(e -> e.getUser() != null)) {
+//                throw new CannotEditEventWithAlreadySoldTicketsException();
+//            }
             event.setName(eventDto.getName());
             event.setDate(eventDto.getDate());
             event.setDescription(eventDto.getDescription());
             event.setArtist(eventDto.getArtist());
 
-            Collection<Ticket> tickets = ticketService.getTicketsForEventWithId(event.getId());
+            Collection<TicketInfoDto> tickets = ticketService.getTicketsForEventWithId(event.getId());
             if (tickets != null) {
                 sendChangeEventInfoToUsers(tickets, eventDto);
             }
@@ -114,6 +118,19 @@ public class EventService implements IEventService {
     }
 
     @Override
+    public EventInfoWithVenueDto getEventWithVenue(long id) throws EntityNotFoundException {
+        Optional<Event> eventOpt = eventRepository.findById(id);
+        if (eventOpt.isEmpty()) throw new EntityNotFoundException(id);
+        var event = eventOpt.get();
+        var venue = venueService.getVenueWithSeats(event.getVenue().getId());
+        var tickets = ticketService.getTicketsForEventWithId(event.getId());
+        return new EventInfoWithVenueDto(
+                event.getId(), event.getName(), event.getDate(), event.getDescription(), event.getArtist(),
+                venue, tickets
+        );
+    }
+
+    @Override
     public void cancelEventById(long id) throws EntityNotFoundException, NotUserTicketException {
         Optional<Event> eventOptional = eventRepository.findById(id);
 
@@ -121,23 +138,23 @@ public class EventService implements IEventService {
             throw new EntityNotFoundException(id);
         }
 
-        Collection<Ticket> tickets = ticketService.getTicketsForEventWithId(id);
+        Collection<TicketInfoDto> tickets = ticketService.getTicketsForEventWithId(id);
 
         if (tickets != null) {
             sendCancellationInfoToUsers(tickets);
-            ticketService.cancelTickets(tickets.stream().map(Ticket::getId).collect(Collectors.toList()));
+            ticketService.cancelTickets(tickets.stream().map(TicketInfoDto::getId).collect(Collectors.toList()));
         }
 
         eventRepository.deleteById(id);
     }
 
-    private void sendCancellationInfoToUsers(Collection<Ticket> tickets) {
+    private void sendCancellationInfoToUsers(Collection<TicketInfoDto> tickets) {
         tickets.forEach(ticket -> {
             // tutaj powinno byc wysylanie maili
         });
     }
 
-    private void sendChangeEventInfoToUsers(Collection<Ticket> tickets, UpdateEventDto updateEventDto) {
+    private void sendChangeEventInfoToUsers(Collection<TicketInfoDto> tickets, UpdateEventDto updateEventDto) {
         tickets.forEach(ticket -> {
             // tutaj tez jakies maile
         });

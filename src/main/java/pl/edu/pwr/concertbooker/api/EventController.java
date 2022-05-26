@@ -7,6 +7,7 @@ import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
 import pl.edu.pwr.concertbooker.exception.custom.NotUserTicketException;
 import pl.edu.pwr.concertbooker.service.event.dto.CreateEventDto;
 import pl.edu.pwr.concertbooker.service.event.dto.EventInfoDto;
+import pl.edu.pwr.concertbooker.service.event.dto.EventInfoWithVenueDto;
 import pl.edu.pwr.concertbooker.service.event.dto.UpdateEventDto;
 import pl.edu.pwr.concertbooker.service.interfaces.IEventService;
 
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("api/v1/event")
 public class EventController {
@@ -26,6 +28,12 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<EventInfoDto> getEventWithId(@PathVariable long id) throws EntityNotFoundException {
         EventInfoDto eventInfoDto = eventService.getEventById(id);
+        return ResponseEntity.of(Optional.of(eventInfoDto));
+    }
+
+    @GetMapping("venue/{id}")
+    public ResponseEntity<EventInfoWithVenueDto> getEventWithVenueId(@PathVariable long id) throws EntityNotFoundException {
+        EventInfoWithVenueDto eventInfoDto = eventService.getEventWithVenue(id);
         return ResponseEntity.of(Optional.of(eventInfoDto));
     }
 

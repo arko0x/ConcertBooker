@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/ticket")
 @AllArgsConstructor
@@ -26,9 +27,7 @@ public class TicketController {
 
     @GetMapping
     public Collection<TicketInfoDto> getTicketsForEventWithId(@RequestParam long eventId) throws EntityNotFoundException {
-        return ticketService.getTicketsForEventWithId(eventId).stream().map(ticket ->
-                new TicketInfoDto(ticket.getId(), ticket.getType(), ticket.getSeat().getId(), ticket.getEvent().getId(),
-                        ticket.getUser() == null)).collect(Collectors.toList());
+        return ticketService.getTicketsForEventWithId(eventId);
     }
 
     @PostMapping("/buy/{id}")

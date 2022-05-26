@@ -7,12 +7,13 @@ import pl.edu.pwr.concertbooker.model.Event;
 import pl.edu.pwr.concertbooker.model.Ticket;
 import pl.edu.pwr.concertbooker.model.enums.TicketType;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface ITicketService {
-    Collection<Ticket> getTicketsForEventWithId(long id) throws EntityNotFoundException;
+    Collection<TicketInfoDto> getTicketsForEventWithId(long id) throws EntityNotFoundException;
     Ticket addTicket(CreateTicketDto createTicketDto) throws EntityNotFoundException;
     Ticket addTicketForEventAndSeat(Event event, long seatId) throws EntityNotFoundException;
 

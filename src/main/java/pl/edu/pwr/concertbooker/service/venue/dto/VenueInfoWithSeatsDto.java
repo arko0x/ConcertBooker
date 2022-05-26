@@ -2,28 +2,22 @@ package pl.edu.pwr.concertbooker.service.venue.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.edu.pwr.concertbooker.model.Sector;
+import pl.edu.pwr.concertbooker.service.sector.dto.SectorInfoWithRowsDto;
 
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class CreateVenueDto {
-    @NotNull
-    @NotEmpty
+@NoArgsConstructor
+public class VenueInfoWithSeatsDto {
+    private long id;
     private String name;
-
-    @NotNull
-    @NotEmpty
     private String address;
+    private Collection<SectorInfoWithRowsDto> sectors;
 
-    @NotNull
-    @NotEmpty
-    private String seatPattern;
 
 }

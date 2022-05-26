@@ -16,6 +16,7 @@ import pl.edu.pwr.concertbooker.security.UserService;
 import pl.edu.pwr.concertbooker.service.interfaces.ISeatService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,10 +31,13 @@ public class TicketService implements ITicketService {
     private UserService userService;
 
     @Override
-    public Collection<Ticket> getTicketsForEventWithId(long id) throws EntityNotFoundException {
+    public Collection<TicketInfoDto> getTicketsForEventWithId(long id) throws EntityNotFoundException {
         Optional<Event> event = eventRepository.findById(id);
         if (event.isPresent()) {
-            return ticketRepository.findTicketsByEventId(event.get().getId());
+            return ticketRepository.findTicketsByEventId(event.get().getId()).stream().map(ticket ->
+                    new TicketInfoDto(ticket.getId(), ticket.getType(), ticket.getSeat().getId(), ticket.getEvent().getId(),
+                            ticket.getUser() == null
+                    )).toList();
         } else {
             throw new EntityNotFoundException(id);
         }

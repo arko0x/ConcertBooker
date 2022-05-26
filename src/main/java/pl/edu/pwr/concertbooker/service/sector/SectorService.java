@@ -14,8 +14,10 @@ import pl.edu.pwr.concertbooker.service.interfaces.IEventService;
 import pl.edu.pwr.concertbooker.service.interfaces.ISectorService;
 import pl.edu.pwr.concertbooker.service.interfaces.IVenueService;
 import pl.edu.pwr.concertbooker.service.interfaces.IVenueUsageService;
+import pl.edu.pwr.concertbooker.service.row.RowServiceUsage;
 import pl.edu.pwr.concertbooker.service.sector.dto.CreateSectorDto;
 import pl.edu.pwr.concertbooker.service.sector.dto.SectorInfoDto;
+import pl.edu.pwr.concertbooker.service.sector.dto.SectorInfoWithRowsDto;
 import pl.edu.pwr.concertbooker.service.sector.dto.UpdateSectorDto;
 
 import java.util.Collection;
@@ -27,6 +29,7 @@ public class SectorService implements ISectorService {
     SectorRepository sectorRepository;
     VenueRepository venueRepository;
     IVenueUsageService venueUsageService;
+    RowServiceUsage rowServiceUsage;
 
     @Override
     public Sector addSectorForVenue(CreateSectorDto createSectorDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
@@ -44,8 +47,7 @@ public class SectorService implements ISectorService {
             throw new EntityNotFoundException(createSectorDto.getVenueId());
         }
 
-        sectorRepository.save(sector);
-        return sector;
+        return sectorRepository.save(sector);
     }
 
     @Override
@@ -81,6 +83,16 @@ public class SectorService implements ISectorService {
                 new SectorInfoDto(sector.getId(), sector.getName(), sector.getRows().size(),
                         sector.getVenue().getId(), sector.getRowInVenue(),
                         sector.getColumnInVenue())).toList();
+    }
+
+    @Override
+    public Collection<SectorInfoWithRowsDto> getAlLSectorsByVenueWithRowsId(long venueId) throws EntityNotFoundException {
+        return sectorRepository.findAll().stream()
+                .filter(sector -> sector.getVenue().getId() == venueId)
+                .map(sector ->
+                        new SectorInfoWithRowsDto(sector.getId(), sector.getName(), sector.getRows().size(),
+                                sector.getVenue().getId(), sector.getRowInVenue(),
+                                sector.getColumnInVenue(), rowServiceUsage.getRowsBySectorId(sector.getId()))).toList();
     }
 
     @Override

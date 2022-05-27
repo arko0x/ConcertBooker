@@ -11,6 +11,7 @@ import pl.edu.pwr.concertbooker.model.enums.TicketType;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
 import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoFullDto;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -28,6 +29,10 @@ public class TicketController {
     @GetMapping
     public Collection<TicketInfoDto> getTicketsForEventWithId(@RequestParam long eventId) throws EntityNotFoundException {
         return ticketService.getTicketsForEventWithId(eventId);
+    }
+    @GetMapping("/full")
+    public Collection<TicketInfoFullDto> getFullTicketsForEventWithId(@RequestParam long eventId) throws EntityNotFoundException {
+        return ticketService.getFullTicketsForEventWithId(eventId);
     }
 
     @PostMapping("/buy/{id}")

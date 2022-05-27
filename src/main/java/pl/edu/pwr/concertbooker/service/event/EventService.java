@@ -123,7 +123,7 @@ public class EventService implements IEventService {
         if (eventOpt.isEmpty()) throw new EntityNotFoundException(id);
         var event = eventOpt.get();
         var venue = venueService.getVenueWithSeats(event.getVenue().getId());
-        var tickets = ticketService.getTicketsForEventWithId(event.getId());
+        var tickets = ticketService.getFullTicketsForEventWithId(event.getId());
         return new EventInfoWithVenueDto(
                 event.getId(), event.getName(), event.getDate(), event.getDescription(), event.getArtist(),
                 venue, tickets

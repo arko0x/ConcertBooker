@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import pl.edu.pwr.concertbooker.model.Ticket;
 import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoFullDto;
 import pl.edu.pwr.concertbooker.service.venue.dto.VenueInfoWithSeatsDto;
 
 import java.time.LocalDateTime;
@@ -18,5 +19,5 @@ public class EventInfoWithVenueDto {
     private String description;
     private String artist;
     private VenueInfoWithSeatsDto venue;
-    private Collection<TicketInfoDto> tickets;
+    private Collection<TicketInfoFullDto> tickets;
 }

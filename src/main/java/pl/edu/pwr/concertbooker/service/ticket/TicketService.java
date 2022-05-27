@@ -17,6 +17,7 @@ import pl.edu.pwr.concertbooker.service.interfaces.ISeatService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
 import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoDto;
+import pl.edu.pwr.concertbooker.service.ticket.dto.TicketInfoFullDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,20 @@ public class TicketService implements ITicketService {
         if (event.isPresent()) {
             return ticketRepository.findTicketsByEventId(event.get().getId()).stream().map(ticket ->
                     new TicketInfoDto(ticket.getId(), ticket.getType(), ticket.getSeat().getId(), ticket.getEvent().getId(),
-                            ticket.getUser() == null
+                            ticket.getType() == null
+                    )).toList();
+        } else {
+            throw new EntityNotFoundException(id);
+        }
+    }
+
+    @Override
+    public Collection<TicketInfoFullDto> getFullTicketsForEventWithId(long id) throws EntityNotFoundException {
+        Optional<Event> event = eventRepository.findById(id);
+        if (event.isPresent()) {
+            return ticketRepository.findTicketsByEventId(event.get().getId()).stream().map(ticket ->
+                    new TicketInfoFullDto(ticket.getId(), ticket.getType(), ticket.getSeat().getId(), ticket.getEvent().getId(),
+                            ticket.getType() == null, ticket.getSeat().getNumber(), ticket.getSeat().getRow().getName(), ticket.getSeat().getRow().getSector().getName()
                     )).toList();
         } else {
             throw new EntityNotFoundException(id);

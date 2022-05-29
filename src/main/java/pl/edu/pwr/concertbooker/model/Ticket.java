@@ -3,7 +3,7 @@ package pl.edu.pwr.concertbooker.model;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pwr.concertbooker.model.enums.TicketType;
-import pl.edu.pwr.concertbooker.security.User;
+import pl.edu.pwr.concertbooker.security.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

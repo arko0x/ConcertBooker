@@ -11,8 +11,8 @@ import pl.edu.pwr.concertbooker.model.Ticket;
 import pl.edu.pwr.concertbooker.model.enums.TicketType;
 import pl.edu.pwr.concertbooker.repository.EventRepository;
 import pl.edu.pwr.concertbooker.repository.TicketRepository;
-import pl.edu.pwr.concertbooker.security.User;
-import pl.edu.pwr.concertbooker.security.UserService;
+import pl.edu.pwr.concertbooker.security.model.User;
+import pl.edu.pwr.concertbooker.security.service.JwtUserDetailsService;
 import pl.edu.pwr.concertbooker.service.interfaces.ISeatService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
@@ -29,7 +29,7 @@ public class TicketService implements ITicketService {
     private TicketRepository ticketRepository;
     private EventRepository eventRepository;
     private ISeatService seatService;
-    private UserService userService;
+    private JwtUserDetailsService userDetailsService;
 
     @Override
     public Collection<TicketInfoDto> getTicketsForEventWithId(long id) throws EntityNotFoundException {
@@ -102,12 +102,12 @@ public class TicketService implements ITicketService {
 
     @Override
     public Ticket buyTicket(long id, TicketType type) throws EntityNotFoundException, NotUserTicketException {
-        User user = userService.getCurrentUser();
+//        User user = userDetailsService.getCurrentUser();
         Optional<Ticket> ticketOptional = ticketRepository.findById(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
             if (ticket.getUser() == null) {
-                ticket.setUser(user);
+                ticket.setUser(null);
                 ticket.setType(type);
                 ticketRepository.save(ticket);
             } else {
@@ -121,17 +121,17 @@ public class TicketService implements ITicketService {
 
     @Override
     public void cancelTickets(List<Long> ids) throws NotUserTicketException {
-        User user = userService.getCurrentUser();
-        Collection<Ticket> tickets = ticketRepository.findTicketsByUserId(user.getId());
-        if (tickets.stream().map(Ticket::getId).toList().containsAll(ids)) {
-            List<Ticket> ticketsToCancel = tickets.stream().filter(ticket -> ids.contains(ticket.getId())).toList();
-            for (int i = 0; i < ticketsToCancel.size(); i++) {
-                ticketsToCancel.get(i).setType(null);
-                ticketsToCancel.get(i).setUser(null);
-            }
-            ticketRepository.saveAll(ticketsToCancel);
-        } else {
-            throw new NotUserTicketException();
-        }
+//        User user = userService.getCurrentUser();
+//        Collection<Ticket> tickets = ticketRepository.findTicketsByUserId(user.getId());
+//        if (tickets.stream().map(Ticket::getId).toList().containsAll(ids)) {
+//            List<Ticket> ticketsToCancel = tickets.stream().filter(ticket -> ids.contains(ticket.getId())).toList();
+//            for (int i = 0; i < ticketsToCancel.size(); i++) {
+//                ticketsToCancel.get(i).setType(null);
+//                ticketsToCancel.get(i).setUser(null);
+//            }
+//            ticketRepository.saveAll(ticketsToCancel);
+//        } else {
+//            throw new NotUserTicketException();
+//        }
     }
 }

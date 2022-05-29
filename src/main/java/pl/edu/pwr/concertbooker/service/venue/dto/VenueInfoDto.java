@@ -15,6 +15,7 @@ public class VenueInfoDto {
     private long id;
     private String name;
     private String address;
+    private String seatPattern;
     private Collection<Sector> sectors;
 
     public VenueInfoDto(long id, String name, String address) {

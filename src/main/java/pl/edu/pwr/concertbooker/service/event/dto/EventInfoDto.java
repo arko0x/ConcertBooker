@@ -13,4 +13,5 @@ public class EventInfoDto {
     private LocalDateTime date;
     private String description;
     private String artist;
+    private long venueId;
 }

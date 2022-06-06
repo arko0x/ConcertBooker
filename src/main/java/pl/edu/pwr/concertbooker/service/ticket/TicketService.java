@@ -102,7 +102,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public Ticket buyTicket(long id, TicketType type) throws EntityNotFoundException, NotUserTicketException {
-        User user = userService.getCurrentUser();
+        User user = new User();
         Optional<Ticket> ticketOptional = ticketRepository.findById(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
@@ -121,7 +121,7 @@ public class TicketService implements ITicketService {
 
     @Override
     public void cancelTickets(List<Long> ids) throws NotUserTicketException {
-        User user = userService.getCurrentUser();
+        User user = new User();
         Collection<Ticket> tickets = ticketRepository.findTicketsByUserId(user.getId());
         if (tickets.stream().map(Ticket::getId).toList().containsAll(ids)) {
             List<Ticket> ticketsToCancel = tickets.stream().filter(ticket -> ids.contains(ticket.getId())).toList();

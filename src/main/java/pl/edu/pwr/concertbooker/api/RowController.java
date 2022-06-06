@@ -2,6 +2,7 @@ package pl.edu.pwr.concertbooker.api;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.concertbooker.exception.custom.CannotEditVenueWithExistingEventsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
@@ -32,6 +33,7 @@ public class RowController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RowInfoDto> addRow(@RequestBody @Valid CreateRowDto rowDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         Row row = rowService.addRow(rowDto);
         RowInfoDto rowInfoDto = new RowInfoDto(row.getId(), rowDto.getName(), rowDto.getSectorId());
@@ -39,6 +41,7 @@ public class RowController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RowInfoDto> updateRow(@RequestBody @Valid UpdateRowDto rowDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         rowService.updateRow(rowDto);
         return ResponseEntity.noContent().build();

@@ -2,6 +2,7 @@ package pl.edu.pwr.concertbooker.api;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.concertbooker.exception.custom.CannotEditVenueWithExistingEventsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
@@ -21,12 +22,14 @@ public class SeatController {
     private ISeatService seatService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SeatInfoDto> addSeat(@RequestBody @Valid CreateSeatDto seatDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         Seat seat = seatService.addSeat(seatDto);
         return ResponseEntity.ok(new SeatInfoDto(seat.getId(), seat.getNumber(), seat.getType(), seatDto.getRowId()));
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SeatInfoDto> updateSeat(@RequestBody @Valid UpdateSeatDto seatDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         seatService.updateSeat(seatDto);
         return ResponseEntity.noContent().build();
@@ -43,6 +46,7 @@ public class SeatController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteSeatById(@PathVariable long id) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         seatService.deleteSeatById(id);
     }

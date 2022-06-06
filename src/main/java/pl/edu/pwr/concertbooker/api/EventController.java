@@ -1,6 +1,7 @@
 package pl.edu.pwr.concertbooker.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.concertbooker.exception.custom.CannotEditEventWithAlreadySoldTicketsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
@@ -44,18 +45,21 @@ public class EventController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreateEventDto> createEvent(@RequestBody @Valid CreateEventDto createEventDto) throws EntityNotFoundException {
         eventService.createEventWithTickets(createEventDto);
         return ResponseEntity.ok(createEventDto);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UpdateEventDto> updateEvent(@RequestBody @Valid UpdateEventDto updateEventDto) throws EntityNotFoundException, CannotEditEventWithAlreadySoldTicketsException {
         eventService.updateEvent(updateEventDto);
         return ResponseEntity.accepted().body(updateEventDto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> cancelEvent(@PathVariable long id) throws EntityNotFoundException, NotUserTicketException {
         eventService.cancelEventById(id);
         return ResponseEntity.ok("Event with id " + id + " cancalled");

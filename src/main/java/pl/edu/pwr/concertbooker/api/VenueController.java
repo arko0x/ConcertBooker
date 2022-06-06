@@ -2,6 +2,7 @@ package pl.edu.pwr.concertbooker.api;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.concertbooker.exception.custom.CannotEditVenueWithExistingEventsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
@@ -27,12 +28,14 @@ public class VenueController {
     private IVenueService venueService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VenueInfoDto> addVenue(@RequestBody @Valid CreateVenueDto venueDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         Venue venue = venueService.addVenue(venueDto);
         return ResponseEntity.ok(new VenueInfoDto(venue.getId(), venue.getName(), venue.getAddress()));
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VenueInfoDto> updateVenue(@RequestBody @Valid UpdateVenueDto venueDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         venueService.updateVenue(venueDto);
         return ResponseEntity.noContent().build();
@@ -56,6 +59,7 @@ public class VenueController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteSeatById(@PathVariable long id) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         venueService.deleteVenueById(id);
     }

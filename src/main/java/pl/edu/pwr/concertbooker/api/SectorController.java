@@ -2,6 +2,7 @@ package pl.edu.pwr.concertbooker.api;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.concertbooker.exception.custom.CannotEditVenueWithExistingEventsException;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
@@ -21,6 +22,7 @@ public class SectorController {
     private ISectorService sectorService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SectorInfoDto> addSector(@RequestBody @Valid CreateSectorDto sectorDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         Sector sector = sectorService.addSectorForVenue(sectorDto);
         return ResponseEntity.ok(new SectorInfoDto(sector.getId(), sectorDto.getSectorName(), sector.getRows() != null ? sector.getRows().size() : 0,
@@ -28,6 +30,7 @@ public class SectorController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SectorInfoDto> updateSectors(@RequestBody @Valid UpdateSectorDto sectorDto) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         sectorService.updateSectorForVenue(sectorDto);
         return ResponseEntity.noContent().build();
@@ -48,6 +51,7 @@ public class SectorController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteSeatById(@PathVariable long id) throws EntityNotFoundException, CannotEditVenueWithExistingEventsException {
         sectorService.deleteSectorById(id);
     }

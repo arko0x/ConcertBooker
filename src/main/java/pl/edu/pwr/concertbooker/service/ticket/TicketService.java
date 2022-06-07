@@ -1,6 +1,8 @@
 package pl.edu.pwr.concertbooker.service.ticket;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.edu.pwr.concertbooker.exception.custom.EntityNotFoundException;
 import pl.edu.pwr.concertbooker.exception.custom.NotUserTicketException;
@@ -13,6 +15,8 @@ import pl.edu.pwr.concertbooker.repository.EventRepository;
 import pl.edu.pwr.concertbooker.repository.TicketRepository;
 import pl.edu.pwr.concertbooker.security.User;
 import pl.edu.pwr.concertbooker.security.UserService;
+import pl.edu.pwr.concertbooker.security.repository.UserRepository;
+import pl.edu.pwr.concertbooker.security.services.UserDetailsServiceImpl;
 import pl.edu.pwr.concertbooker.service.interfaces.ISeatService;
 import pl.edu.pwr.concertbooker.service.interfaces.ITicketService;
 import pl.edu.pwr.concertbooker.service.ticket.dto.CreateTicketDto;
@@ -29,7 +33,7 @@ public class TicketService implements ITicketService {
     private TicketRepository ticketRepository;
     private EventRepository eventRepository;
     private ISeatService seatService;
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Collection<TicketInfoDto> getTicketsForEventWithId(long id) throws EntityNotFoundException {
@@ -102,7 +106,9 @@ public class TicketService implements ITicketService {
 
     @Override
     public Ticket buyTicket(long id, TicketType type) throws EntityNotFoundException, NotUserTicketException {
-        User user = new User();
+
+        User user = userRepository.findByUsername(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+                .orElseThrow(RuntimeException::new);
         Optional<Ticket> ticketOptional = ticketRepository.findById(id);
         if (ticketOptional.isPresent()) {
             Ticket ticket = ticketOptional.get();
@@ -121,7 +127,8 @@ public class TicketService implements ITicketService {
 
     @Override
     public void cancelTickets(List<Long> ids) throws NotUserTicketException {
-        User user = new User();
+        User user = userRepository.findByUsername(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
+                .orElseThrow(RuntimeException::new);
         Collection<Ticket> tickets = ticketRepository.findTicketsByUserId(user.getId());
         if (tickets.stream().map(Ticket::getId).toList().containsAll(ids)) {
             List<Ticket> ticketsToCancel = tickets.stream().filter(ticket -> ids.contains(ticket.getId())).toList();

@@ -19,7 +19,7 @@ public class Sector {
     @NotNull
     private String name;
     
-    @OneToMany(mappedBy = "sector")
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.REMOVE)
     private Collection<Row> rows;
 
     @NotNull

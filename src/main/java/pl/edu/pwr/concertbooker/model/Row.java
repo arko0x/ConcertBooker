@@ -21,7 +21,7 @@ public class Row {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "row")
+    @OneToMany(mappedBy = "row", cascade = CascadeType.REMOVE)
     private Collection<Seat> seats;
 
     @ManyToOne

@@ -21,7 +21,7 @@ public class Venue {
     @NotNull
     private String address;
 
-    @OneToMany(mappedBy = "venue")
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.REMOVE)
     private Collection<Sector> sectors;
 
     @OneToMany(mappedBy = "venue")
